@@ -1,24 +1,25 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-  
+  allFormValues: {},
+  formName: ''
 }
 
 export const cardContainer = createSlice({
   name: 'cardContainer',
   initialState,
   reducers: {
-    addFormValues: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.value += 1
+    addFormValues: (state, action) => {
+      state.allFormValues = action.payload
     },
+
+    setFormName: (state, action)  => {
+      state.formName = action.payload
+    }
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { cardContainerAction } = cardContainer.actions
+export const { addFormValues, setFormName } = cardContainer.actions
 
 export default cardContainer.reducer

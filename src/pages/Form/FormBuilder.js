@@ -17,7 +17,7 @@ const EmailInput = fieldRenderProps => {
     </div>;
 };
 
-const FormContainer = () => {
+const FormBuilder = () => {
     const handleSubmit = dataItem => alert(JSON.stringify(dataItem, null, 2));
     return (
         <div className='form-wrapper'>
@@ -54,4 +54,4 @@ const FormContainer = () => {
 };
 
 
-export default FormContainer
+export default FormBuilder
