@@ -1,27 +1,27 @@
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
+const DownloadButton = () => {
+  const handleDownload = async () => {
+    try {
+      // Make the API call
+      const response = await axios.get('http://localhost:5000/api/data', {
+        responseType: 'blob', // Ensure the response is treated as a file
+      });
 
-const app = express();
+      // Create a Blob from the JSON response
+      const blob = new Blob([response.data], { type: 'application/json' });
 
-app.get('/download-json', (req, res) => {
-  const data = {
-    name: 'John Doe',
-    age: 30,
-    occupation: 'Software Developer'
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = window.URL.createObjectURL(blob);
+      link.download = 'data.json'; // Specify the file name
+
+      // Append the link, trigger a click, and remove the link
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } catch (error) {
+      console.error('Error downloading the file', error);
+    }
   };
 
-  const filePath = path.join(__dirname, 'data.json');
-
-  // Write data to a file
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-
-  // Set headers for file download
-  res.setHeader('Content-Disposition', 'attachment; filename=data.json');
-  res.setHeader('Content-Type', 'application/json');
-  res.sendFile(filePath, (err) => {
-    if (err) {
-      console.error('Error sending file:', err);
-    }
-  });
-});
+  return <button onClick={handleDownload}>Download JSON</button>;
+};
