@@ -25,3 +25,15 @@ const DownloadButton = () => {
 
   return <button onClick={handleDownload}>Download JSON</button>;
 };
+
+
+ <Snackbar
+        open={open}
+        autoHideDuration={3000} // Toast automatically hides after 3 seconds
+        onClose={handleClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }} // Position of the toast
+      >
+        <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+          This is a success message!
+        </Alert>
+      </Snackbar>
