@@ -3,23 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tabulator Table with Embedded Search and Sort</title>
+    <title>Bootstrap Styled Tabulator Table</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Tabulator CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.9.3/css/tabulator.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.6.1/css/tabulator.min.css" rel="stylesheet">
+    <style>
+        .tabulator-table {
+            background: none; /* Remove Tabulator's background color */
+            border-collapse: collapse; /* Ensure borders are removed */
+        }
+
+        .tabulator-tablerow:nth-child(even) {
+            background-color: #f2f2f2; /* Bootstrap's striped row color */
+        }
+
+        .tabulator-header .tabulator-col, 
+        .tabulator-cell {
+            border: 0 !important; /* Remove default border */
+            border-right: none !important; /* Remove right border */
+        }
+
+        .tabulator-header {
+            border-bottom: 1px solid #dee2e6 !important; /* Standard table bottom border */
+        }
+
+        .tabulator .tabulator-col:last-child,
+        .tabulator .tabulator-cell:last-child {
+            border-right: none !important; /* Ensure last column has no right border */
+        }
+
+        .tabulator {
+            border: none !important; /* Remove Tabulator's border style */
+        }
+
+    </style>
 </head>
 <body>
     <div class="container mt-5">
-        <h4 class="text-center">Tabulator Table with Embedded Search and Sort</h4>
+        <h4 class="text-center">Bootstrap Styled Tabulator Table</h4>
         <!-- Table Container -->
         <div id="tabulator-table"></div>
+
     </div>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Tabulator JS -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/4.9.3/js/tabulator.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tabulator/5.6.1/js/tabulator.min.js"></script>
     <script>
         // Sample data
         const tableData = [
@@ -49,51 +80,3 @@
     </script>
 </body>
 </html>
-
-.custom-form-control {
-            display: block;
-            width: 100%;
-            padding: 0.375rem 0.75rem;
-            font-size: 1rem;
-            font-weight: 400;
-            line-height: 1.5;
-            color: #495057;
-            background-color: #fff;
-            background-clip: padding-box;
-            border: 1px solid #ced4da;
-            border-radius: 0.25rem;
-            transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-        }
-
-        .custom-form-control:focus {
-            border-color: #80bdff;
-            outline: 0;
-            box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
-        }
-
-        .custom-form-control::placeholder {
-            color: #6c757d;
-            opacity: 1;
-        }
-.tabulator-table {
-            background: none; /* Remove Tabulator's default background color */
-            border-collapse: collapse; /* Ensure borders are removed */
-        }
-
-        .tabulator-row:nth-child(odd) {
-            background-color: #f9f9f9; /* Light gray background for odd rows */
-            border-bottom: 1px solid #ddd; /* Bottom border */
-        }
-
-        .tabulator-row:nth-child(even) {
-            background-color: #fff; /* White background for even rows */
-            border-bottom: 1px solid #ddd; /* Bottom border */
-        }
-
-        .tabulator-row:hover {
-            background-color: #f1f1f1; /* Hover effect */
-        }
-
-        .tabulator-cell {
-            border-right: 1px solid #ddd; /* Right border for cells */
-        }
