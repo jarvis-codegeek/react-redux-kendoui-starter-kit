@@ -75,4 +75,25 @@
             color: #6c757d;
             opacity: 1;
         }
+.tabulator-table {
+            background: none; /* Remove Tabulator's default background color */
+            border-collapse: collapse; /* Ensure borders are removed */
+        }
 
+        .tabulator-row:nth-child(odd) {
+            background-color: #f9f9f9; /* Light gray background for odd rows */
+            border-bottom: 1px solid #ddd; /* Bottom border */
+        }
+
+        .tabulator-row:nth-child(even) {
+            background-color: #fff; /* White background for even rows */
+            border-bottom: 1px solid #ddd; /* Bottom border */
+        }
+
+        .tabulator-row:hover {
+            background-color: #f1f1f1; /* Hover effect */
+        }
+
+        .tabulator-cell {
+            border-right: 1px solid #ddd; /* Right border for cells */
+        }
