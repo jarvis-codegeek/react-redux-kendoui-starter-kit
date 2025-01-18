@@ -1,3 +1,31 @@
 The CIS Benchmarks are a collection of best practices for securely configuring IT systems, applications, and networks. 
 Developed by cybersecurity experts, these benchmarks are divided into system-specific guidelines that cover a wide range of environments. 
 Below are detailed points about the CIS Benchmarks:
+
+
+CIS Benchmarks
+CIS Benchmarks are detailed configuration guides for securely deploying and managing IT systems. These benchmarks cover:
+
+Operating Systems: Windows, Linux, macOS, etc.
+Cloud Services: AWS, Azure, Google Cloud, etc.
+Network Devices: Firewalls, routers, switches, etc.
+Applications: Web servers, databases, etc.
+Each benchmark provides specific settings and parameters to enhance system security.
+
+
+STIG Benchmarks (Security Technical Implementation Guides) are security configuration standards developed by the Defense Information Systems Agency (DISA) to ensure secure deployment and operation of information systems within the U.S. Department of Defense (DoD). 
+
+Below are detailed points about STIG benchmarks:
+
+
+Key Features of STIGs
+System Hardening:
+
+Provide specific guidance to secure IT assets against known threats.
+Focus on reducing vulnerabilities by configuring systems securely.
+DoD Compliance:
+
+Ensure compliance with DoD policies, such as the Risk Management Framework (RMF).
+Automation Support:
+
+Tools like SCAP (Security Content Automation Protocol) and STIG Viewer facilitate implementation and compliance validation.
