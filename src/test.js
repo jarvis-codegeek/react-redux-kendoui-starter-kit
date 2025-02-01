@@ -1,31 +1,49 @@
-import React from 'react';
-import { TextField } from '@mui/material';
+function getRulesFromGuidelines(guidelines) {
+  const resultArray = [];
+  let totalRulesCount = 0;
+  
+  function findRules(group) {
+    try {
+      // Base case: If group contains Rules, collect data and count rules
+      if (group.Rules) {
+        resultArray.push({
+          title: group.title,
+          id: group.id,
+          rulesCount: group.Rules.length,
+          Rules: group.Rules
+        });
+        totalRulesCount += group.Rules.length;
+        return;
+      }
+      
+      // If group contains Groups, iterate through each group
+      if (group.Groups) {
+        for (const subgroup of group.Groups) {
+          findRules(subgroup);
+        }
+      }
+    } catch (error) {
+      console.error("An error occurred while finding rules:", error);
+    }
+  }
 
-const CustomTextField = () => {
-  return (
-    <TextField
-      label="Custom TextField"
-      variant="outlined"
-      sx={{
-        '& .MuiInputBase-root': {
-          height: 40, // Adjust the height
-        },
-        '& .MuiInputLabel-root': {
-          fontSize: '0.875rem',
-          lineHeight: '0.7em',
-          padding: '1px',
-          top: -2 // Adjust the font size of the label
-        },
-        '& .MuiInputBase-input': {
-          padding: '10px 14px', // Adjust the padding to fit the height
-          fontSize: '0.875rem', // Adjust the font size of the input text
-        },
-        '& .MuiInputBase-input::placeholder': {
-          fontSize: '0.75rem', // Adjust the font size of the placeholder text
-        },
-      }}
-    />
-  );
-};
+  try {
+    // Iterate through each guideline in the guidelines array
+    for (const guideline of guidelines) {
+      if (guideline.Group) {
+        findRules(guideline.Group);
+      }
+    }
 
-export default CustomTextField;
+    return {
+      rulesArray: resultArray,
+      totalRulesCount: totalRulesCount
+    };
+  } catch (error) {
+    console.error("An error occurred while processing guidelines:", error);
+    return {
+      rulesArray: [],
+      totalRulesCount: 0
+    };
+  }
+}
