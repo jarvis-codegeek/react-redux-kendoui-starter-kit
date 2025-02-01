@@ -1,10 +1,9 @@
-function getRulesFromGuidelines(guidelines) {
+function getAllRulesFromGuidelines(guidelines) {
   const resultArray = [];
-  let totalRulesCount = 0;
-  
+
   function findRules(group) {
     try {
-      // Base case: If group contains Rules, collect data and count rules
+      // If group contains Rules, collect data and push to resultArray
       if (group.Rules) {
         resultArray.push({
           title: group.title,
@@ -12,14 +11,14 @@ function getRulesFromGuidelines(guidelines) {
           rulesCount: group.Rules.length,
           Rules: group.Rules
         });
-        totalRulesCount += group.Rules.length;
-        return;
       }
-      
+
       // If group contains Groups, iterate through each group
       if (group.Groups) {
         for (const subgroup of group.Groups) {
-          findRules(subgroup);
+          if (subgroup.Group) {
+            findRules(subgroup.Group); // Access subgroup.Group before recursion
+          }
         }
       }
     } catch (error) {
@@ -35,15 +34,9 @@ function getRulesFromGuidelines(guidelines) {
       }
     }
 
-    return {
-      rulesArray: resultArray,
-      totalRulesCount: totalRulesCount
-    };
+    return resultArray;
   } catch (error) {
     console.error("An error occurred while processing guidelines:", error);
-    return {
-      rulesArray: [],
-      totalRulesCount: 0
-    };
+    return [];
   }
 }
