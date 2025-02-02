@@ -7,6 +7,7 @@ import {
   getPaginationRowModel,
   getExpandedRowModel,
   ColumnDef,
+  flexRender,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -22,7 +23,7 @@ import {
 import { ArrowDropUp, ArrowDropDown, ExpandMore, ExpandLess } from '@mui/icons-material';
 import DOMPurify from 'dompurify';
 
-// Define the data structure
+// Define the data structure.
 interface RowData {
   id: number;
   name: string;
@@ -35,9 +36,9 @@ interface RowData {
 const data: RowData[] = [
   {
     id: 1,
-    name: "Alice",
+    name: 'Alice',
     age: 30,
-    job: "Engineer",
+    job: 'Engineer',
     description:
       "<xhtml:div><xhtml:p>This security setting requires changes</xhtml:p><xhtml:div><xhtml:a>some link</xhtml:a> <xhtml:code>some code here</xhtml:code></xhtml:div></xhtml:div>",
     fixtext:
@@ -45,9 +46,9 @@ const data: RowData[] = [
   },
   {
     id: 2,
-    name: "Bob",
+    name: 'Bob',
     age: 25,
-    job: "Designer",
+    job: 'Designer',
     description:
       "<xhtml:div><xhtml:p>Bob is a creative designer. <xhtml:code>CSS</xhtml:code> and <xhtml:code>Photoshop</xhtml:code> are his main tools.</xhtml:p></xhtml:div>",
     fixtext:
@@ -63,7 +64,7 @@ const columns: ColumnDef<RowData>[] = [
   { accessorKey: 'id', header: 'ID' },
 ];
 
-// Function to parse custom xhtml tags and sanitize the HTML using DOMPurify
+// Function to parse custom xhtml tags and sanitize the HTML using DOMPurify.
 const parseAndSanitizeHtml = (html: string): string => {
   const parsedHtml = html
     .replace(/<xhtml:div>/g, '<div>')
@@ -78,15 +79,15 @@ const parseAndSanitizeHtml = (html: string): string => {
 };
 
 const TableComponent: React.FC = () => {
-  // Global state for search, sorting, pagination, and expanded rows.
   const [globalFilter, setGlobalFilter] = useState<string>('');
   const [sorting, setSorting] = useState<any[]>([]);
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
-  const [expanded, setExpanded] = useState<{ [key: number]: boolean }>(() =>
+  // TanStack Table expects the expanded state to be of type Record<string, boolean>.
+  const [expanded, setExpanded] = useState<Record<string, boolean>>(() =>
     data.reduce((acc, _, index) => {
-      acc[index] = true; // Initially expand all rows
+      acc[index.toString()] = true; // Initially expand all rows.
       return acc;
-    }, {} as { [key: number]: boolean })
+    }, {} as Record<string, boolean>)
   );
 
   const table = useReactTable<RowData>({
@@ -104,8 +105,7 @@ const TableComponent: React.FC = () => {
     onPaginationChange: setPagination,
     getRowCanExpand: () => true,
     filterFns: {
-      // Custom filter function that searches across all row fields,
-      // including expanded section data (description, fixtext, and id)
+      // Custom filter that searches across all row data including expanded fields.
       text: (row, columnId, filterValue) => {
         const cellValue = row.getValue(columnId);
         const { description, fixtext, id } = row.original;
@@ -115,27 +115,26 @@ const TableComponent: React.FC = () => {
     },
   });
 
-  // Expand all rows
+  // Functions to expand/collapse all rows.
   const expandAllRows = () => {
     const newExpanded = data.reduce((acc, _, index) => {
-      acc[index] = true;
+      acc[index.toString()] = true;
       return acc;
-    }, {} as { [key: number]: boolean });
+    }, {} as Record<string, boolean>);
     setExpanded(newExpanded);
   };
 
-  // Collapse all rows
   const collapseAllRows = () => {
     const newExpanded = data.reduce((acc, _, index) => {
-      acc[index] = false;
+      acc[index.toString()] = false;
       return acc;
-    }, {} as { [key: number]: boolean });
+    }, {} as Record<string, boolean>);
     setExpanded(newExpanded);
   };
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
-      {/* Header: Search Field and Expand/Collapse All Buttons (aligned horizontally) */}
+      {/* Header: Search Field and Expand/Collapse All Buttons */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
         <TextField
           label="Search"
@@ -168,7 +167,7 @@ const TableComponent: React.FC = () => {
                     onClick={header.column.getToggleSortingHandler()}
                     style={{ cursor: 'pointer', backgroundColor: '#f1f1f1' }}
                   >
-                    {header.column.columnDef.header}
+                    {flexRender(header.column.columnDef.header, header.getContext())}
                     {header.column.getIsSorted() === 'asc'
                       ? ' 🔼'
                       : header.column.getIsSorted() === 'desc'
@@ -189,7 +188,12 @@ const TableComponent: React.FC = () => {
                     </IconButton>
                   </TableCell>
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>{cell.renderValue()}</TableCell>
+                    <TableCell key={cell.id}>
+                      {flexRender(
+                        cell.column.columnDef.cell ?? (() => cell.renderValue()),
+                        cell.getContext()
+                      )}
+                    </TableCell>
                   ))}
                 </TableRow>
                 {row.getIsExpanded() && (
@@ -222,14 +226,12 @@ const TableComponent: React.FC = () => {
         </Table>
       </TableContainer>
 
-      {/* Pagination Controls aligned to the bottom-right */}
+      {/* Pagination Controls (aligned to bottom-right) */}
       <TablePagination
         component="div"
         count={data.length}
         page={pagination.pageIndex}
-        onPageChange={(event, newPage) =>
-          setPagination({ ...pagination, pageIndex: newPage })
-        }
+        onPageChange={(event, newPage) => setPagination({ ...pagination, pageIndex: newPage })}
         rowsPerPage={pagination.pageSize}
         onRowsPerPageChange={(event) =>
           setPagination({ ...pagination, pageSize: Number(event.target.value) })
