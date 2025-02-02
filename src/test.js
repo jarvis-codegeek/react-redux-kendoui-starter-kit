@@ -1,29 +1,47 @@
 import React, { useState } from "react";
-import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel, getPaginationRowModel, getExpandedRowModel } from "@tanstack/react-table";
+import { useReactTable, getCoreRowModel, getSortedRowModel, getFilteredRowModel, getPaginationRowModel, getExpandedRowModel, Table } from "@tanstack/react-table";
 import { ArrowDropUp, ArrowDropDown, ExpandMore, ExpandLess } from "@mui/icons-material"; // Import MUI Icons
 import DOMPurify from "dompurify"; // Import DOMPurify for sanitization
 
-const data = [
+// Define the shape of the row data
+interface RowData {
+  id: number;
+  name: string;
+  age: number;
+  job: string;
+  description: string;
+  fixtext: string;
+}
+
+const data: RowData[] = [
   {
     id: 1,
     name: "Alice",
+    age: 30,
+    job: "Engineer",
     description: "<xhtml:div><xhtml:p>This security setting requires changes</xhtml:p><xhtml:div><xhtml:a>some link</xhtml:a> <xhtml:code>some code here</xhtml:code></xhtml:div></xhtml:div>",
     fixtext: "<xhtml:div>Working at <xhtml:a href='https://example.com'>XYZ Corp.</xhtml:a></xhtml:div><xhtml:p>Has experience in various technologies.</xhtml:p>",
   },
   {
     id: 2,
     name: "Bob",
+    age: 25,
+    job: "Designer",
     description: "<xhtml:div><xhtml:p>Bob is a creative designer. <xhtml:code>CSS</xhtml:code> and <xhtml:code>Photoshop</xhtml:code> are his main tools.</xhtml:p></xhtml:div>",
     fixtext: "<xhtml:div>Freelancer working with various clients.</xhtml:div><xhtml:p>Specialized in UI/UX design.</xhtml:p>",
-  }
+  },
+  // Add more data entries as needed...
 ];
 
 const columns = [
   { accessorKey: "name", header: "Name" },
+  { accessorKey: "age", header: "Age" },
+  { accessorKey: "job", header: "Job" },
+  { accessorKey: "id", header: "ID" },
 ];
 
 // Function to parse the xhtml tags and sanitize the input text using DOMPurify
-const parseAndSanitizeHtml = (html) => {
+const parseAndSanitizeHtml = (html: string) => {
   // Replace custom <xhtml:div>, <xhtml:p>, <xhtml:a>, <xhtml:code> tags with standard HTML tags
   const parsedHtml = html
     .replace(/<xhtml:div>/g, "<div>")
@@ -39,13 +57,13 @@ const parseAndSanitizeHtml = (html) => {
   return DOMPurify.sanitize(parsedHtml);
 };
 
-export default function TableComponent() {
-  const [globalFilter, setGlobalFilter] = useState("");
+const TableComponent: React.FC = () => {
+  const [globalFilter, setGlobalFilter] = useState<string>("");
   const [sorting, setSorting] = useState([]);
   const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 });
 
   // Set all rows expanded by default
-  const [expanded, setExpanded] = useState(() => {
+  const [expanded, setExpanded] = useState<{ [key: number]: boolean }>(() => {
     return data.reduce((acc, _, index) => {
       acc[index] = true; // Expand all rows initially
       return acc;
@@ -181,7 +199,7 @@ export default function TableComponent() {
                 <tr>
                   <td colSpan={columns.length + 1} style={{ backgroundColor: "#f9f9f9", padding: "10px" }}>
                     {/* Render ID */}
-                    <div><strong>ID:</strong> {row.original.id}</div>
+                    <strong>ID:</strong> {row.original.id}<br />
                     <strong>Description:</strong>
                     <div
                       dangerouslySetInnerHTML={{
@@ -259,4 +277,6 @@ export default function TableComponent() {
       </div>
     </div>
   );
-}
+};
+
+export default TableComponent;
