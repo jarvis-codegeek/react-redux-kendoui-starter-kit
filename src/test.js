@@ -1,22 +1,26 @@
-WITH limited_items AS (
+WITH limited_products AS (
     SELECT 
-        i.id AS item_id,
-        i.name AS item_name,
-        i.version AS item_version
-    FROM items i
-    LIMIT 4500
+        id AS product_id,
+        title AS product_title,
+        version AS product_version,
+        title_tsvector
+    FROM product 
+    LIMIT 5139
 )
-SELECT
-    li.item_id,
-    li.item_name,
-    li.item_version,
+SELECT  
+    lp.product_id,
+    lp.product_title,
+    lp.product_version,
     CASE 
-        WHEN c.id IS NOT NULL OR s.id IS NOT NULL THEN 'Yes' 
+        WHEN c.benchmarktitle IS NOT NULL OR s.benchmarktitle IS NOT NULL THEN 'Yes' 
         ELSE 'No' 
-    END AS b_available
+    END AS benchmark_available,
+    c.benchmarktitle AS cis_benchmark,
+    s.benchmarktitle AS stig_benchmark
 FROM 
-    limited_items li
-    LEFT JOIN c_benchmarks c 
-    ON similarity(li.item_name, c.benchmarktitle) > 0.5
-    LEFT JOIN s_benchmarks s 
-    ON similarity(li.item_name, s.benchmarktitle) > 0.5
+    limited_products lp
+    LEFT JOIN cis_benchmarks c 
+    ON lp.title_tsvector @@ to_tsquery('english', c.benchmarktitle)  -- Full-text search for CIS
+    LEFT JOIN stig_benchmarks s 
+    ON lp.title_tsvector @@ to_tsquery('english', s.benchmarktitle)  -- Full-text search for STIG
+ORDER BY benchmark_available DESC;
