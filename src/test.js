@@ -1,39 +1,31 @@
-import React from 'react';
-import Highcharts from 'highcharts';
-import HighchartsReact from 'highcharts-react-official';
-
-const PieChart = () => {
-  // Pie chart options
   const options = {
     chart: {
-      type: 'pie' // Set chart type to 'pie'
+      type: "pie"
     },
     title: {
-      text: 'Browser Market Share'
+      text: "Product CIS Benchmark Distribution"
+    },
+    tooltip: {
+      pointFormat: "{series.name}: <b>{point.y}</b>" // ✅ Show numbers instead of percentages
+    },
+    plotOptions: {
+      pie: {
+        allowPointSelect: true,
+        cursor: "pointer",
+        dataLabels: {
+          enabled: true,
+          format: "<b>{point.name}</b>: {point.y} / " + totalProducts // ✅ Show numbers with total
+        }
+      }
     },
     series: [
       {
-        name: 'Browsers',
+        name: "Products",
+        colorByPoint: true,
         data: [
-          { name: 'Chrome', y: 60 },
-          { name: 'Firefox', y: 20 },
-          { name: 'Edge', y: 10 },
-          { name: 'Safari', y: 5 },
-          { name: 'Others', y: 5 }
+          { name: "Products with CIS Benchmarks", y: cisBenchmarked, color: "#0088FE" },
+          { name: "Remaining Products", y: remainingProducts, color: "#FFBB28" }
         ]
       }
-    ],
-    tooltip: {
-      pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-    }
+    ]
   };
-
-  return (
-    <div>
-      <h1>Pie Chart Example</h1>
-      <HighchartsReact highcharts={Highcharts} options={options} />
-    </div>
-  );
-};
-
-export default PieChart;
